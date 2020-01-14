@@ -1,0 +1,140 @@
+<aura:component access="global" controller="FeedController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes">
+    <aura:attribute name="category" type="String" default="WORLD"/>
+    <aura:attribute name="lang" type="String" default="ENGLISH"/>
+    <aura:attribute name="newses" type="FeedController.Feed[]"/>
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    <lightning:card title="Category"
+                              class="slds-m-top_small
+                                     slds-m-left_small
+                                     slds-m-right_small">
+    <lightning:buttonStateful
+                              class="slds-m-left_small"
+                              labelWhenOff="World"
+                              labelWhenOn="World News"
+                              labelWhenHover="WORLD"
+                              iconNameWhenOff="utility:add"
+                              iconNameWhenOn="utility:check"
+                              iconNameWhenHover="utility:close"
+                              state="{! v.category=='WORLD'?'Selected':'' }"
+                              onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Nation"
+                                  labelWhenOn="Nation News"
+                                  labelWhenHover="NATION"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='NATION'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Business"
+                                  labelWhenOn="Business News"
+                                  labelWhenHover="BUSINESS"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='BUSINESS'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Technology"
+                                  labelWhenOn="Technology News"
+                                  labelWhenHover="TECHNOLOGY"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='TECHNOLOGY'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Entertainment"
+                                  labelWhenOn="Entertainment News"
+                                  labelWhenHover="ENTERTAINMENT"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='ENTERTAINMENT'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Sports"
+                                  labelWhenOn="Sports News"
+                                  labelWhenHover="SPORTS"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='SPORTS'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Science"
+                                  labelWhenOn="Science News"
+                                  labelWhenHover="SCIENCE"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='SCIENCE'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="Health"
+                                  labelWhenOn="Health News"
+                                  labelWhenHover="HEALTH"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  iconNameWhenHover="utility:close"
+                                  state="{! v.category=='HEALTH'?'Selected':'' }"
+                                  onclick="{! c.onCategoryClick}"/>
+        
+    </lightning:card>
+    <lightning:card title="Language"
+                              class="slds-m-left_small
+                                     slds-m-right_small">
+        <lightning:buttonStateful
+                              class="slds-m-left_small"
+                                  labelWhenOff="English"
+                                  labelWhenOn="English News"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  state="{! v.lang=='ENGLISH'?'Selected':'' }"
+                                  onclick="{! c.onLangClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="हिंदी"
+                                  labelWhenOn="हिंदी समाचार"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  state="{! v.lang=='HINDI'?'Selected':'' }"
+                                  onclick="{! c.onLangClick}"/>
+        <lightning:buttonStateful
+                                  labelWhenOff="తెలుగు"
+                                  labelWhenOn="తెలుగు వార్తలు"
+                                  iconNameWhenOff="utility:add"
+                                  iconNameWhenOn="utility:check"
+                                  state="{! v.lang=='TELUGU'?'Selected':'' }"
+                                  onclick="{! c.onLangClick}"/>
+    
+    </lightning:card>
+
+
+    <aura:if isTrue="{! empty(v.newses)}">
+        <div class="slds-spinner_container">
+            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <aura:iteration items="{! v.newses}" var="news">
+        <lightning:card 
+                        class="slds-m-left_small
+                               slds-m-right_small" 
+                        title="{! news.title }">
+            <aura:set attribute="actions">
+                <lightning:button label="Go to News"
+                                  value="{! news.link}"
+                                  onclick="{! c.onNewsClick}"/>
+            </aura:set>
+            <div class="slds-m-left_small
+                        slds-p-horizontal_small">
+                <aura:unescapedHtml value="{!news.description}"/>	
+            </div>
+        </lightning:card>
+    </aura:iteration>
+</aura:component>
