@@ -1,0 +1,82 @@
+public class FeedController {
+
+    public static List<Feed> feeds;
+    @AuraEnabled 
+    public static List<Feed> getNews(String lang,String topic){
+        if(feeds==null){
+            feeds=new List<Feed>();
+        }else{
+            feeds.clear();
+        }
+        String WORLD='CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB',
+            NATION='CAAqIggKIhxDQkFTRHdvSkwyMHZNRGxqTjNjd0VnSmxiaWdBUAE', 
+            BUSINESS='CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FtVnVHZ0pWVXlnQVAB',
+            TECHNOLOGY='CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB',
+            ENTERTAINMENT='CAAqJggKIiBDQkFTRWdvSUwyMHZNREpxYW5RU0FtVnVHZ0pWVXlnQVAB',
+            SPORTS='CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp1ZEdvU0FtVnVHZ0pWVXlnQVAB',
+            SCIENCE='CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp0Y1RjU0FtVnVHZ0pWVXlnQVAB',
+            HEALTH='CAAqIQgKIhtDQkFTRGdvSUwyMHZNR3QwTlRFU0FtVnVLQUFQAQ';
+        String url='https://news.google.com/rss/topics/';
+        url=url+(topic.equals('WORLD')?WORLD:
+                topic.equals('NATION')?NATION:
+                topic.equals('BUSINESS')?BUSINESS:
+                topic.equals('TECHNOLOGY')?TECHNOLOGY:
+                topic.equals('ENTERTAINMENT')?ENTERTAINMENT:
+                topic.equals('SPORTS')?SPORTS:
+                topic.equals('SCIENCE')?SCIENCE:
+                topic.equals('HEALTH')?HEALTH:NATION);
+        url=url+(lang.equals('ENGLISH')?'?hl=en-IN&gl=IN&ceid=IN:en':
+                lang.equals('HINDI')?'?hl=hi&gl=IN&ceid=IN:hi':
+                lang.equals('TELUGU')?'?hl=te&gl=IN&ceid=IN:te':'?hl=en-IN&gl=IN&ceid=IN:en');
+        Http h = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(url);
+        req.setMethod('GET');
+        HttpResponse res = h.send(req);
+        Dom.Document doc = res.getBodyDocument();
+        Dom.XMLNode rss = doc.getRootElement();
+        Dom.XmlNode channel=rss.getChildElement('channel',null);
+        Dom.XmlNode[] newsItems=channel.getChildElements();
+        for(Dom.XmlNode news:newsItems){
+            if(news.getName().equals('item')){
+                System.debug('title'+news.getChildElement('title',null).getText());
+                Feed feed=new Feed();
+                feed.setTitle(news.getChildElement('title',null).getText());
+                feed.setDescription(news.getChildElement('description',null).getText());
+                feed.setLink(news.getChildElement('link',null).getText());
+                feed.setSource(news.getChildElement('source',null).getText());
+                feeds.add(feed);
+            }
+        }
+        return feeds;
+    }
+    
+    public class Feed{
+       
+    @AuraEnabled public String title,description,link,source;
+        String getTitle(){
+            return title;
+        }
+        String getDescription(){
+            return description;
+        }
+        String getLink(){
+            return link;
+        }
+        String getSource(){
+            return source;
+        }
+        void setTitle(String title){
+            this.title=title;
+        }
+        void setDescription(String description){
+            this.description=description;
+        }
+        void setLink(String link){
+            this.link=link;
+        }
+        void setSource(String source){
+            this.source=source;
+        }
+    }
+}
