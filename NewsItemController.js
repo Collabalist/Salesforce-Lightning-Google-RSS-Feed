@@ -10,7 +10,7 @@
     onLangClick : function(component,event,helper){
         var lang=event.getSource().get("v.labelWhenOff");
         component.set("v.lang",(lang.valueOf()=="ENGLISH"?"ENGLISH":
-                                lang.valueOf()=="हिंदी"?"HINDI":
+                                lang.valueOf()=="हिंदी"?"HINDU":
                                 lang.valueOf()=="తెలుగు"?"TELUGU":"ENGLISH"));
 		helper.helperMethod(component);
     },
